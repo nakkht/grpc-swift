@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.0
 /*
  * Copyright 2017, gRPC Authors All rights reserved.
  *
@@ -19,7 +19,7 @@ import Foundation
 
 var packageDependencies: [Package.Dependency] = [
 // Official SwiftProtobuf library, for [de]serializing data to send on the wire.
-.package(name: "SwiftProtobuf" , url: "https://github.com/apple/swift-protobuf.git", .upToNextMajor(from: "1.5.0")),
+.package(url: "https://github.com/apple/swift-protobuf.git", .upToNextMajor(from: "1.5.0")),
 
 // Command line argument parser for our auxiliary command line tools.
 .package(url: "https://github.com/kylef/Commander.git", .upToNextMinor(from: "0.8.0"))
@@ -44,8 +44,8 @@ let package = Package(
         .target(name: "protoc-gen-swiftgrpc",
                 dependencies: [
                     "SwiftProtobuf",
-                    .product(name: "SwiftProtobufPluginLibrary", package: "SwiftProtobuf"),
-                    .product(name: "protoc-gen-swift", package: "SwiftProtobuf")]),
+                    "SwiftProtobufPluginLibrary",
+                    "protoc-gen-swift"]),
         .target(name: "BoringSSL"),
         .target(name: "Echo",
                 dependencies: [

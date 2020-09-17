@@ -34,19 +34,14 @@ let package = Package(
     targets: [
         .target(name: "SwiftGRPC",
                 dependencies: ["CgRPC", "SwiftProtobuf"]),
-        .target(name: "CgRPC",
-                dependencies: ["BoringSSL"],
-                cSettings: [
-                    .headerSearchPath("../BoringSSL/include"),
-                    .unsafeFlags(["-Wno-module-import-in-extern-c"])],
-                linkerSettings: [.linkedLibrary("z")]),
+        .binaryTarget(name: "CgRPC",
+                      path: "XCFrameworks/CgRPC.xcframework"),
         .target(name: "RootsEncoder"),
         .target(name: "protoc-gen-swiftgrpc",
                 dependencies: [
                     "SwiftProtobuf",
                     .product(name: "SwiftProtobufPluginLibrary", package: "SwiftProtobuf"),
                     .product(name: "protoc-gen-swift", package: "SwiftProtobuf")]),
-        .target(name: "BoringSSL"),
         .target(name: "Echo",
                 dependencies: [
                     "SwiftGRPC",

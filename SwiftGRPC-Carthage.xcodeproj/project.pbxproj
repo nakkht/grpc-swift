@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7629BF8025139417008086ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7629BF7A25139403008086ED /* Foundation.framework */; };
-		763427E5251A4FB7009214BD /* BoringSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftGRPC::BoringSSL::Product" /* BoringSSL.framework */; };
-		763427E6251A4FB7009214BD /* BoringSSL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftGRPC::BoringSSL::Product" /* BoringSSL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		763427E8251A5026009214BD /* CgRPC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftGRPC::CgRPC::Product" /* CgRPC.framework */; };
+		76CA3731251B735000D0583B /* BoringSSL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "SwiftGRPC::BoringSSL::Product" /* BoringSSL.framework */; };
 		BC88F073DC8F3ACD4A296A25 /* cgrpc.h in Headers */ = {isa = PBXBuildFile; fileRef = OBJ_1013 /* cgrpc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		OBJ_1803 /* a_bitstr.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* a_bitstr.c */; };
 		OBJ_1804 /* a_bool.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* a_bool.c */; };
@@ -906,20 +905,6 @@
 			remoteInfo = BoringSSL;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		763427E7251A4FB7009214BD /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				763427E6251A4FB7009214BD /* BoringSSL.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7629BF7025139275008086ED /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -2416,7 +2401,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				763427E5251A4FB7009214BD /* BoringSSL.framework in Frameworks */,
+				76CA3731251B735000D0583B /* BoringSSL.framework in Frameworks */,
 				7629BF8025139417008086ED /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6483,7 +6468,6 @@
 				OBJ_2126 /* Sources */,
 				OBJ_2554 /* Frameworks */,
 				C05348E260D2D922755053BD /* Headers */,
-				763427E7251A4FB7009214BD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

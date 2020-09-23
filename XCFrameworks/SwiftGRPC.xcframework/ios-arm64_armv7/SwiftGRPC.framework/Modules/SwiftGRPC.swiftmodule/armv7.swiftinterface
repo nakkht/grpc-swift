@@ -1,0 +1,617 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)
+// swift-module-flags: -target armv7-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SwiftGRPC
+import CgRPC
+import CoreTelephony
+import Dispatch
+import Foundation
+import Swift
+import SwiftProtobuf
+import SystemConfiguration
+@_hasMissingDesignatedInitializers public class ByteBuffer {
+  public init(data: Foundation.Data)
+  @objc deinit
+  public func data() -> Foundation.Data?
+}
+public enum CallStyle {
+  case unary
+  case serverStreaming
+  case clientStreaming
+  case bidiStreaming
+  public static func == (a: SwiftGRPC.CallStyle, b: SwiftGRPC.CallStyle) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum CallWarning : Swift.Error {
+  case blocked
+  public static func == (a: SwiftGRPC.CallWarning, b: SwiftGRPC.CallWarning) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+@_hasMissingDesignatedInitializers public class Call {
+  public static var messageQueueMaxLength: Swift.Int?
+  final public let messageQueueEmpty: Dispatch.DispatchGroup
+  @objc deinit
+  public func start(_ style: SwiftGRPC.CallStyle, metadata: SwiftGRPC.Metadata, message: Foundation.Data? = nil, completion: ((SwiftGRPC.CallResult) -> Swift.Void)? = nil) throws
+  public func sendMessage(data: Foundation.Data, completion: ((Swift.Error?) -> Swift.Void)? = nil) throws
+  public func closeAndReceiveMessage(completion: @escaping (SwiftGRPC.CallResult) -> Swift.Void) throws
+  public func receiveMessage(completion: @escaping (SwiftGRPC.CallResult) -> Swift.Void) throws
+  public func close(completion: (() -> Swift.Void)? = nil) throws
+  public func messageQueueLength() -> Swift.Int
+  public func cancel()
+}
+public enum CallError : Swift.Error {
+  case ok
+  case unknown
+  case notOnServer
+  case notOnClient
+  case alreadyAccepted
+  case alreadyInvoked
+  case notInvoked
+  case alreadyFinished
+  case tooManyOperations
+  case invalidFlags
+  case invalidMetadata
+  case invalidMessage
+  case notServerCompletionQueue
+  case batchTooBig
+  case payloadTypeMismatch
+  case completionQueueShutdown
+  public static func == (a: SwiftGRPC.CallError, b: SwiftGRPC.CallError) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public struct CallResult : Swift.CustomStringConvertible {
+  public let success: Swift.Bool
+  public let statusCode: SwiftGRPC.StatusCode
+  public let statusMessage: Swift.String?
+  public let resultData: Foundation.Data?
+  public let initialMetadata: SwiftGRPC.Metadata?
+  public let trailingMetadata: SwiftGRPC.Metadata?
+  public static func error(statusCode: SwiftGRPC.StatusCode = .unknown, statusMessage: Swift.String? = nil, initialMetadata: SwiftGRPC.Metadata? = nil, trailingMetadata: SwiftGRPC.Metadata? = nil) -> SwiftGRPC.CallResult
+  public static func success(resultData: Foundation.Data, initialMetadata: SwiftGRPC.Metadata? = nil, trailingMetadata: SwiftGRPC.Metadata? = nil) -> SwiftGRPC.CallResult
+  public init(success: Swift.Bool, statusCode: SwiftGRPC.StatusCode, statusMessage: Swift.String?, resultData: Foundation.Data?, initialMetadata: SwiftGRPC.Metadata?, trailingMetadata: SwiftGRPC.Metadata?)
+  public var description: Swift.String {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class Channel {
+  public var timeout: Swift.Double
+  public var host: Swift.String
+  convenience public init(address: Swift.String, secure: Swift.Bool = true, arguments: [SwiftGRPC.Channel.Argument] = [])
+  convenience public init(googleAddress: Swift.String, arguments: [SwiftGRPC.Channel.Argument] = [])
+  convenience public init(address: Swift.String, certificates: Swift.String = kRootCertificates, clientCertificates: Swift.String? = nil, clientKey: Swift.String? = nil, arguments: [SwiftGRPC.Channel.Argument] = [])
+  public func shutdown()
+  @objc deinit
+  public func makeCall(_ method: Swift.String, host: Swift.String? = nil, timeout: Foundation.TimeInterval? = nil) throws -> SwiftGRPC.Call
+  public func connectivityState(tryToConnect: Swift.Bool = false) -> SwiftGRPC.Channel.ConnectivityState
+  public func addConnectivityObserver(callback: @escaping (SwiftGRPC.Channel.ConnectivityState) -> Swift.Void)
+}
+extension Channel {
+  public enum Argument {
+    case stringValued(key: Swift.String, value: Swift.String)
+    case integerValued(key: Swift.String, value: Swift.Int32)
+    public static func timeIntervalValued(key: Swift.String, value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func boolValued(key: Swift.String, value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func defaultAuthority(_ value: Swift.String) -> SwiftGRPC.Channel.Argument
+    public static func primaryUserAgent(_ value: Swift.String) -> SwiftGRPC.Channel.Argument
+    public static func secondaryUserAgent(_ value: Swift.String) -> SwiftGRPC.Channel.Argument
+    public static func keepAliveTime(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func keepAliveTimeout(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func keepAlivePermitWithoutCalls(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func reconnectBackoffInitial(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func reconnectBackoffMin(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func reconnectBackoffMax(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func http2EnableTrueBinary(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func http2MinSentPingInterval(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func http2MaxPingsWithoutData(_ value: Swift.UInt32) -> SwiftGRPC.Channel.Argument
+    public static func sslTargetNameOverride(_ value: Swift.String) -> SwiftGRPC.Channel.Argument
+    public static func enableCensus(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func enableLoadReporting(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func enableMinimalStack(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+    public static func maxConcurrentStreams(_ value: Swift.UInt32) -> SwiftGRPC.Channel.Argument
+    public static func maxReceiveMessageLength(_ value: Swift.Int32) -> SwiftGRPC.Channel.Argument
+    public static func maxSendMessageLength(_ value: Swift.Int32) -> SwiftGRPC.Channel.Argument
+    public static func maxConnectionIdle(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func maxConnectionAge(_ value: Foundation.TimeInterval) -> SwiftGRPC.Channel.Argument
+    public static func enableDeadlineChecks(_ value: Swift.Bool) -> SwiftGRPC.Channel.Argument
+  }
+}
+extension Channel {
+  public enum ConnectivityState {
+    case initialized
+    case idle
+    case connecting
+    case ready
+    case transientFailure
+    case shutdown
+    case unknown
+    public static func == (a: SwiftGRPC.Channel.ConnectivityState, b: SwiftGRPC.Channel.ConnectivityState) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+}
+open class ClientNetworkMonitor {
+  final public let cellularInfo: CoreTelephony.CTTelephonyNetworkInfo
+  public var isReachable: Swift.Bool? {
+    get
+  }
+  public var isUsingWifi: Swift.Bool? {
+    get
+  }
+  public var cellularName: Swift.String? {
+    get
+  }
+  public struct State : Swift.Equatable {
+    public let lastChange: SwiftGRPC.ClientNetworkMonitor.Change
+    public let isReachable: Swift.Bool
+    public static func == (a: SwiftGRPC.ClientNetworkMonitor.State, b: SwiftGRPC.ClientNetworkMonitor.State) -> Swift.Bool
+  }
+  public enum Change : Swift.Equatable {
+    case reachability(isReachable: Swift.Bool)
+    case cellularToWifi
+    case wifiToCellular
+    case cellularTechnology(technology: Swift.String)
+    public static func == (a: SwiftGRPC.ClientNetworkMonitor.Change, b: SwiftGRPC.ClientNetworkMonitor.Change) -> Swift.Bool
+  }
+  public init?(host: Swift.String = "google.com", queue: Dispatch.DispatchQueue? = nil, useNewCellMonitor: Swift.Bool = false, callback: @escaping (SwiftGRPC.ClientNetworkMonitor.State) -> Swift.Void)
+  @objc deinit
+}
+@inlinable internal func withAutoReleasePool<T>(_ execute: () throws -> T) rethrows -> T {
+  return try autoreleasepool {
+    try execute()
+  }
+}
+@_hasMissingDesignatedInitializers public class Handler {
+  final public let requestMetadata: SwiftGRPC.Metadata
+  public var call: SwiftGRPC.Call {
+    get
+  }
+  public var host: Swift.String? {
+    get
+    set
+  }
+  public var method: Swift.String? {
+    get
+    set
+  }
+  public var caller: Swift.String? {
+    get
+    set
+  }
+  @objc deinit
+  public func shutdown()
+  public func sendMetadata(initialMetadata: SwiftGRPC.Metadata, completion: ((Swift.Bool) -> Swift.Void)? = nil) throws
+  public func receiveMessage(initialMetadata: SwiftGRPC.Metadata, completion: @escaping (Foundation.Data?) -> Swift.Void) throws
+  public func sendResponse(message: Foundation.Data, status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)? = nil) throws
+  public func sendStatus(_ status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)? = nil) throws
+}
+@_hasMissingDesignatedInitializers public class Metadata {
+  public enum Error : Swift.Error {
+    case doesNotOwnFields
+    public static func == (a: SwiftGRPC.Metadata.Error, b: SwiftGRPC.Metadata.Error) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public init()
+  public init(_ pairs: [Swift.String : Swift.String]) throws
+  @objc deinit
+  public func count() -> Swift.Int
+  public func key(_ index: Swift.Int) -> Swift.String?
+  public func value(_ index: Swift.Int) -> Swift.String?
+  public func add(key: Swift.String, value: Swift.String) throws
+  public var dictionaryRepresentation: [Swift.String : Swift.String] {
+    get
+  }
+  public func copy() -> SwiftGRPC.Metadata
+}
+extension Metadata {
+  public subscript(key: Swift.String) -> Swift.String? {
+    get
+  }
+  public func data(forKey key: Swift.String) -> Foundation.Data?
+}
+public class Mutex {
+  public init()
+  @objc deinit
+  public func lock()
+  public func unlock()
+  public func synchronize<T>(block: () throws -> T) rethrows -> T
+}
+public let kRootCertificates: Swift.String
+public class Server {
+  public var onCompletion: (() -> Swift.Void)?
+  public init(address: Swift.String, loopTimeout: Foundation.TimeInterval = 600)
+  public init(address: Swift.String, key: Swift.String, certs: Swift.String, rootCerts: Swift.String? = nil, loopTimeout: Foundation.TimeInterval = 600)
+  @objc deinit
+  public func run(handlerFunction: @escaping (SwiftGRPC.Handler) -> Swift.Void)
+  public func stop()
+}
+public struct ServerStatus : Swift.Error {
+  public let code: SwiftGRPC.StatusCode
+  public let message: Swift.String
+  public let trailingMetadata: SwiftGRPC.Metadata
+  public init(code: SwiftGRPC.StatusCode, message: Swift.String, trailingMetadata: SwiftGRPC.Metadata = Metadata())
+  public static let ok: SwiftGRPC.ServerStatus
+  public static let processingError: SwiftGRPC.ServerStatus
+  public static let noRequestData: SwiftGRPC.ServerStatus
+  public static let sendingInitialMetadataFailed: SwiftGRPC.ServerStatus
+}
+public enum StatusCode : Swift.Int {
+  case ok
+  case cancelled
+  case unknown
+  case invalidArgument
+  case deadlineExceeded
+  case notFound
+  case alreadyExists
+  case permissionDenied
+  case unauthenticated
+  case resourceExhausted
+  case failedPrecondition
+  case aborted
+  case outOfRange
+  case unimplemented
+  case internalError
+  case unavailable
+  case dataLoss
+  case doNotUse
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers final public class gRPC {
+  public static func initialize()
+  public static func shutdown()
+  public static var version: Swift.String {
+    get
+  }
+  public static var gStandsFor: Swift.String {
+    get
+  }
+  @objc deinit
+}
+public protocol ClientCall : AnyObject {
+  static var method: Swift.String { get }
+  func cancel()
+}
+open class ClientCallBase {
+  open class var method: Swift.String {
+    get
+  }
+  final public let call: SwiftGRPC.Call
+  public init(_ channel: SwiftGRPC.Channel) throws
+  @objc deinit
+}
+extension ClientCallBase : SwiftGRPC.ClientCall {
+  public func cancel()
+}
+public protocol ClientCallBidirectionalStreaming : SwiftGRPC.ClientCall {
+  func waitForSendOperationsToFinish()
+}
+@_inheritsConvenienceInitializers open class ClientCallBidirectionalStreamingBase<InputType, OutputType> : SwiftGRPC.ClientCallBase, SwiftGRPC.ClientCallBidirectionalStreaming, SwiftGRPC.StreamReceiving, SwiftGRPC.StreamSending where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias ReceivedType = OutputType
+  public typealias SentType = InputType
+  public func start(metadata: SwiftGRPC.Metadata, completion: ((SwiftGRPC.CallResult) -> Swift.Void)?) throws -> Self
+  public func closeSend(completion: (() -> Swift.Void)?) throws
+  public func closeSend() throws
+  @objc deinit
+  override public init(_ channel: SwiftGRPC.Channel) throws
+}
+open class ClientCallBidirectionalStreamingTestStub<InputType, OutputType> : SwiftGRPC.ClientCallBidirectionalStreaming where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  open class var method: Swift.String {
+    get
+  }
+  open var lock: SwiftGRPC.Mutex
+  open var inputs: [InputType]
+  open var outputs: [OutputType]
+  public init()
+  open func _receive(timeout: Dispatch.DispatchTime) throws -> OutputType?
+  open func receive(completion: @escaping (SwiftGRPC.ResultOrRPCError<OutputType?>) -> Swift.Void) throws
+  open func send(_ message: InputType, completion _: @escaping (Swift.Error?) -> Swift.Void) throws
+  open func _send(_ message: InputType, timeout: Dispatch.DispatchTime) throws
+  open func closeSend(completion: (() -> Swift.Void)?) throws
+  open func closeSend() throws
+  open func waitForSendOperationsToFinish()
+  open func cancel()
+  @objc deinit
+}
+public protocol ClientCallClientStreaming : SwiftGRPC.ClientCall {
+  func waitForSendOperationsToFinish()
+}
+@_inheritsConvenienceInitializers open class ClientCallClientStreamingBase<InputType, OutputType> : SwiftGRPC.ClientCallBase, SwiftGRPC.ClientCallClientStreaming, SwiftGRPC.StreamSending where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias SentType = InputType
+  public func start(metadata: SwiftGRPC.Metadata, completion: ((SwiftGRPC.CallResult) -> Swift.Void)?) throws -> Self
+  public func closeAndReceive(completion: @escaping (SwiftGRPC.ResultOrRPCError<OutputType>) -> Swift.Void) throws
+  public func closeAndReceive() throws -> OutputType
+  @objc deinit
+  override public init(_ channel: SwiftGRPC.Channel) throws
+}
+open class ClientCallClientStreamingTestStub<InputType, OutputType> : SwiftGRPC.ClientCallClientStreaming where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  open class var method: Swift.String {
+    get
+  }
+  open var lock: SwiftGRPC.Mutex
+  open var inputs: [InputType]
+  open var output: OutputType?
+  public init()
+  open func send(_ message: InputType, completion _: @escaping (Swift.Error?) -> Swift.Void) throws
+  open func _send(_ message: InputType, timeout: Dispatch.DispatchTime) throws
+  open func closeAndReceive(completion: @escaping (SwiftGRPC.ResultOrRPCError<OutputType>) -> Swift.Void) throws
+  open func closeAndReceive() throws -> OutputType
+  open func waitForSendOperationsToFinish()
+  open func cancel()
+  @objc deinit
+}
+public protocol ClientCallServerStreaming : SwiftGRPC.ClientCall {
+}
+@_inheritsConvenienceInitializers open class ClientCallServerStreamingBase<InputType, OutputType> : SwiftGRPC.ClientCallBase, SwiftGRPC.ClientCallServerStreaming, SwiftGRPC.StreamReceiving where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias ReceivedType = OutputType
+  public func start(request: InputType, metadata: SwiftGRPC.Metadata, completion: ((SwiftGRPC.CallResult) -> Swift.Void)?) throws -> Self
+  @objc deinit
+  override public init(_ channel: SwiftGRPC.Channel) throws
+}
+open class ClientCallServerStreamingTestStub<OutputType> : SwiftGRPC.ClientCallServerStreaming where OutputType : SwiftProtobuf.Message {
+  open class var method: Swift.String {
+    get
+  }
+  open var lock: SwiftGRPC.Mutex
+  open var outputs: [OutputType]
+  public init()
+  open func _receive(timeout: Dispatch.DispatchTime) throws -> OutputType?
+  open func receive(completion: @escaping (SwiftGRPC.ResultOrRPCError<OutputType?>) -> Swift.Void) throws
+  open func cancel()
+  @objc deinit
+}
+public protocol ClientCallUnary : SwiftGRPC.ClientCall {
+}
+@_inheritsConvenienceInitializers open class ClientCallUnaryBase<InputType, OutputType> : SwiftGRPC.ClientCallBase, SwiftGRPC.ClientCallUnary where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public func run(request: InputType, metadata: SwiftGRPC.Metadata) throws -> OutputType
+  public func start(request: InputType, metadata: SwiftGRPC.Metadata, completion: @escaping ((OutputType?, SwiftGRPC.CallResult) -> Swift.Void)) throws -> Self
+  @objc deinit
+  override public init(_ channel: SwiftGRPC.Channel) throws
+}
+open class ClientCallUnaryTestStub : SwiftGRPC.ClientCallUnary {
+  open class var method: Swift.String {
+    get
+  }
+  public init()
+  open func cancel()
+  @objc deinit
+}
+public enum RPCError : Swift.Error {
+  case invalidMessageReceived
+  case timedOut
+  case callError(SwiftGRPC.CallResult)
+}
+extension RPCError {
+  public var callResult: SwiftGRPC.CallResult? {
+    get
+  }
+}
+public enum ResultOrRPCError<ResultType> {
+  case result(ResultType)
+  case error(SwiftGRPC.RPCError)
+}
+extension ResultOrRPCError {
+  public var result: ResultType? {
+    get
+  }
+  public var error: SwiftGRPC.RPCError? {
+    get
+  }
+}
+public protocol ServerSession : AnyObject {
+  var requestMetadata: SwiftGRPC.Metadata { get }
+  var initialMetadata: SwiftGRPC.Metadata { get set }
+  func cancel()
+}
+open class ServerSessionBase : SwiftGRPC.ServerSession {
+  public var handler: SwiftGRPC.Handler
+  public var requestMetadata: SwiftGRPC.Metadata {
+    get
+  }
+  public var initialMetadata: SwiftGRPC.Metadata
+  public var call: SwiftGRPC.Call {
+    get
+  }
+  public init(handler: SwiftGRPC.Handler)
+  public func cancel()
+  @objc deinit
+}
+open class ServerSessionTestStub : SwiftGRPC.ServerSession {
+  open var requestMetadata: SwiftGRPC.Metadata
+  open var initialMetadata: SwiftGRPC.Metadata
+  public init()
+  open func cancel()
+  @objc deinit
+}
+public protocol ServerSessionBidirectionalStreaming : SwiftGRPC.ServerSession {
+  func waitForSendOperationsToFinish()
+}
+open class ServerSessionBidirectionalStreamingBase<InputType, OutputType> : SwiftGRPC.ServerSessionBase, SwiftGRPC.ServerSessionBidirectionalStreaming, SwiftGRPC.StreamReceiving, SwiftGRPC.StreamSending where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias ReceivedType = InputType
+  public typealias SentType = OutputType
+  public typealias ProviderBlock = (SwiftGRPC.ServerSessionBidirectionalStreamingBase<InputType, OutputType>) throws -> SwiftGRPC.ServerStatus?
+  public init(handler: SwiftGRPC.Handler, providerBlock: @escaping SwiftGRPC.ServerSessionBidirectionalStreamingBase<InputType, OutputType>.ProviderBlock)
+  public func run() throws -> SwiftGRPC.ServerStatus?
+  @objc deinit
+  override public init(handler: SwiftGRPC.Handler)
+}
+@_inheritsConvenienceInitializers open class ServerSessionBidirectionalStreamingTestStub<InputType, OutputType> : SwiftGRPC.ServerSessionTestStub, SwiftGRPC.ServerSessionBidirectionalStreaming where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  open var lock: SwiftGRPC.Mutex
+  open var inputs: [InputType]
+  open var outputs: [OutputType]
+  open var status: SwiftGRPC.ServerStatus?
+  open func _receive(timeout: Dispatch.DispatchTime) throws -> InputType?
+  open func receive(completion: @escaping (SwiftGRPC.ResultOrRPCError<InputType?>) -> Swift.Void) throws
+  open func send(_ message: OutputType, completion _: @escaping (Swift.Error?) -> Swift.Void) throws
+  open func _send(_ message: OutputType, timeout: Dispatch.DispatchTime) throws
+  open func close(withStatus status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)?) throws
+  open func waitForSendOperationsToFinish()
+  @objc deinit
+  override public init()
+}
+public protocol ServerSessionClientStreaming : SwiftGRPC.ServerSession {
+}
+open class ServerSessionClientStreamingBase<InputType, OutputType> : SwiftGRPC.ServerSessionBase, SwiftGRPC.ServerSessionClientStreaming, SwiftGRPC.StreamReceiving where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias ReceivedType = InputType
+  public typealias ProviderBlock = (SwiftGRPC.ServerSessionClientStreamingBase<InputType, OutputType>) throws -> OutputType?
+  public init(handler: SwiftGRPC.Handler, providerBlock: @escaping SwiftGRPC.ServerSessionClientStreamingBase<InputType, OutputType>.ProviderBlock)
+  public func sendAndClose(response: OutputType, status: SwiftGRPC.ServerStatus = .ok, completion: (() -> Swift.Void)? = nil) throws
+  public func sendErrorAndClose(status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)? = nil) throws
+  public func run() throws -> SwiftGRPC.ServerStatus?
+  @objc deinit
+  override public init(handler: SwiftGRPC.Handler)
+}
+@_inheritsConvenienceInitializers open class ServerSessionClientStreamingTestStub<InputType, OutputType> : SwiftGRPC.ServerSessionTestStub, SwiftGRPC.ServerSessionClientStreaming where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  open var lock: SwiftGRPC.Mutex
+  open var inputs: [InputType]
+  open var output: OutputType?
+  open var status: SwiftGRPC.ServerStatus?
+  open func _receive(timeout: Dispatch.DispatchTime) throws -> InputType?
+  open func receive(completion: @escaping (SwiftGRPC.ResultOrRPCError<InputType?>) -> Swift.Void) throws
+  open func sendAndClose(response: OutputType, status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)?) throws
+  open func sendErrorAndClose(status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)? = nil) throws
+  open func close() throws
+  @objc deinit
+  override public init()
+}
+public protocol ServerSessionServerStreaming : SwiftGRPC.ServerSession {
+  func waitForSendOperationsToFinish()
+}
+open class ServerSessionServerStreamingBase<InputType, OutputType> : SwiftGRPC.ServerSessionBase, SwiftGRPC.ServerSessionServerStreaming, SwiftGRPC.StreamSending where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias SentType = OutputType
+  public typealias ProviderBlock = (InputType, SwiftGRPC.ServerSessionServerStreamingBase<InputType, OutputType>) throws -> SwiftGRPC.ServerStatus?
+  public init(handler: SwiftGRPC.Handler, providerBlock: @escaping SwiftGRPC.ServerSessionServerStreamingBase<InputType, OutputType>.ProviderBlock)
+  public func run() throws -> SwiftGRPC.ServerStatus?
+  @objc deinit
+  override public init(handler: SwiftGRPC.Handler)
+}
+@_inheritsConvenienceInitializers open class ServerSessionServerStreamingTestStub<OutputType> : SwiftGRPC.ServerSessionTestStub, SwiftGRPC.ServerSessionServerStreaming where OutputType : SwiftProtobuf.Message {
+  open var lock: SwiftGRPC.Mutex
+  open var outputs: [OutputType]
+  open var status: SwiftGRPC.ServerStatus?
+  open func send(_ message: OutputType, completion _: @escaping (Swift.Error?) -> Swift.Void) throws
+  open func _send(_ message: OutputType, timeout: Dispatch.DispatchTime) throws
+  open func close(withStatus status: SwiftGRPC.ServerStatus, completion: (() -> Swift.Void)?) throws
+  open func waitForSendOperationsToFinish()
+  @objc deinit
+  override public init()
+}
+public protocol ServerSessionUnary : SwiftGRPC.ServerSession {
+}
+open class ServerSessionUnaryBase<InputType, OutputType> : SwiftGRPC.ServerSessionBase, SwiftGRPC.ServerSessionUnary where InputType : SwiftProtobuf.Message, OutputType : SwiftProtobuf.Message {
+  public typealias SentType = OutputType
+  public typealias ProviderBlock = (InputType, SwiftGRPC.ServerSessionUnaryBase<InputType, OutputType>) throws -> OutputType
+  public init(handler: SwiftGRPC.Handler, providerBlock: @escaping SwiftGRPC.ServerSessionUnaryBase<InputType, OutputType>.ProviderBlock)
+  public func run() throws -> SwiftGRPC.ServerStatus?
+  @objc deinit
+  override public init(handler: SwiftGRPC.Handler)
+}
+@_inheritsConvenienceInitializers open class ServerSessionUnaryTestStub : SwiftGRPC.ServerSessionTestStub, SwiftGRPC.ServerSessionUnary {
+  @objc deinit
+  override public init()
+}
+public protocol ServiceClient : AnyObject {
+  var channel: SwiftGRPC.Channel { get }
+  var metadata: SwiftGRPC.Metadata { get set }
+  var host: Swift.String { get set }
+  var timeout: Foundation.TimeInterval { get set }
+}
+open class ServiceClientBase : SwiftGRPC.ServiceClient {
+  final public let channel: SwiftGRPC.Channel
+  public var metadata: SwiftGRPC.Metadata
+  public var host: Swift.String {
+    get
+    set
+  }
+  public var timeout: Foundation.TimeInterval {
+    get
+    set
+  }
+  required public init(address: Swift.String, secure: Swift.Bool = true, arguments: [SwiftGRPC.Channel.Argument] = [])
+  required public init(channel: SwiftGRPC.Channel)
+  required public init(googleAPI: Swift.String, arguments: [SwiftGRPC.Channel.Argument] = [])
+  required public init(address: Swift.String, certificates: Swift.String, clientCertificates: Swift.String? = nil, clientKey: Swift.String? = nil, arguments: [SwiftGRPC.Channel.Argument] = [])
+  @objc deinit
+}
+open class ServiceClientTestStubBase : SwiftGRPC.ServiceClient {
+  open var channel: SwiftGRPC.Channel {
+    get
+  }
+  open var metadata: SwiftGRPC.Metadata
+  open var host: Swift.String
+  open var timeout: Swift.Double
+  public init()
+  @objc deinit
+}
+public enum HandleMethodError : Swift.Error {
+  case unknownMethod
+  public static func == (a: SwiftGRPC.HandleMethodError, b: SwiftGRPC.HandleMethodError) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public protocol ServiceProvider {
+  var serviceName: Swift.String { get }
+  func handleMethod(_ method: Swift.String, handler: SwiftGRPC.Handler) throws -> SwiftGRPC.ServerStatus?
+}
+open class ServiceServer {
+  final public let address: Swift.String
+  final public let server: SwiftGRPC.Server
+  public var shouldLogRequests: Swift.Bool
+  public init(address: Swift.String, serviceProviders: [SwiftGRPC.ServiceProvider], loopTimeout: Foundation.TimeInterval = 600)
+  public init(address: Swift.String, certificateString: Swift.String, keyString: Swift.String, rootCerts: Swift.String? = nil, serviceProviders: [SwiftGRPC.ServiceProvider], loopTimeout: Foundation.TimeInterval = 600)
+  public init?(address: Swift.String, certificateURL: Foundation.URL, keyURL: Foundation.URL, rootCertsURL: Foundation.URL? = nil, serviceProviders: [SwiftGRPC.ServiceProvider], loopTimeout: Foundation.TimeInterval = 600)
+  public func start()
+  @objc deinit
+}
+public protocol StreamReceiving {
+  associatedtype ReceivedType : SwiftProtobuf.Message
+  var call: SwiftGRPC.Call { get }
+}
+extension StreamReceiving {
+  public func receive(completion: @escaping (SwiftGRPC.ResultOrRPCError<Self.ReceivedType?>) -> Swift.Void) throws
+  public func _receive(timeout: Dispatch.DispatchTime) throws -> Self.ReceivedType?
+}
+public protocol StreamSending {
+  associatedtype SentType : SwiftProtobuf.Message
+  var call: SwiftGRPC.Call { get }
+}
+extension StreamSending {
+  public func send(_ message: Self.SentType, completion: @escaping (Swift.Error?) -> Swift.Void) throws
+  public func _send(_ message: Self.SentType, timeout: Dispatch.DispatchTime) throws
+  public func waitForSendOperationsToFinish()
+}
+extension StreamSending where Self : SwiftGRPC.ServerSessionBase {
+  public func close(withStatus status: SwiftGRPC.ServerStatus = .ok, completion: (() -> Swift.Void)? = nil) throws
+}
+extension SwiftGRPC.CallStyle : Swift.Equatable {}
+extension SwiftGRPC.CallStyle : Swift.Hashable {}
+extension SwiftGRPC.CallWarning : Swift.Equatable {}
+extension SwiftGRPC.CallWarning : Swift.Hashable {}
+extension SwiftGRPC.CallError : Swift.Equatable {}
+extension SwiftGRPC.CallError : Swift.Hashable {}
+extension SwiftGRPC.Channel.ConnectivityState : Swift.Equatable {}
+extension SwiftGRPC.Channel.ConnectivityState : Swift.Hashable {}
+extension SwiftGRPC.Metadata.Error : Swift.Equatable {}
+extension SwiftGRPC.Metadata.Error : Swift.Hashable {}
+extension SwiftGRPC.StatusCode : Swift.Equatable {}
+extension SwiftGRPC.StatusCode : Swift.Hashable {}
+extension SwiftGRPC.StatusCode : Swift.RawRepresentable {}
+extension SwiftGRPC.HandleMethodError : Swift.Equatable {}
+extension SwiftGRPC.HandleMethodError : Swift.Hashable {}

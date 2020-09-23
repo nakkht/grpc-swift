@@ -35,10 +35,13 @@ echo "#####################"
 echo "Cleaning: ${OUTPUT_DIR_PATH}"
 rm -rf $OUTPUT_DIR_PATH
 
-FRAMEWORK="CgRPC"
 
-echo "Archiving $FRAMEWORK"
-buildArchive ${FRAMEWORK}
+array=( "CgRPC" "BoringSSL" "SwiftGRPC" "SwiftProtobuf" )
+for target in "${array[@]}"
+do
+  echo "Archiving $target"
+  buildArchive $target
 
-echo "Creating $FRAMEWORK.xcframework"
-createXCFramework ${FRAMEWORK}
+  echo "Creating $target.xcframework"
+  createXCFramework $target
+done
